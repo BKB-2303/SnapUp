@@ -1,5 +1,5 @@
 // Base URL for your Express backend
-const BASE_URL = "http://localhost:8000/api/news"; // Update this if your backend is deployed
+const BASE_URL = "https://snapup-backend.onrender.com/api/news" // Update this if your backend is deployed
 
 // Define the number of articles per page and initialize pagination variables
 const articlesPerPage = 12; 
