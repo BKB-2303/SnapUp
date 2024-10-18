@@ -1,5 +1,9 @@
-// Base URL for your Express backend
-const BASE_URL = "https://snapup-backend.onrender.com/api/news" // Update this if your backend is deployed
+// Define the API keys for the News API
+// const API_KEY = "c2a4668d9d584324a66de3fe50c41d14";
+const API_KEY = "1d3a0eefa97b499d8fbc4ee93eeb40b7";
+
+// Base URL for the News API
+const url = "https://newsapi.org/v2/everything?q=";
 
 // Define the number of articles per page and initialize pagination variables
 const articlesPerPage = 12; 
@@ -10,23 +14,14 @@ let currentQuery = "India";
 // Fetch news when the page is loaded
 window.addEventListener("load", () => fetchNews(currentQuery, currentPage));
 
-// Asynchronous function to fetch news articles from the backend based on the query and page number
+// Asynchronous function to fetch news articles based on the query and page number
 async function fetchNews(query, page) {
-    try {
-        const res = await fetch(`${BASE_URL}?q=${query}&page=${page}`);
-        const data = await res.json();
-        
-        // Check if the response has articles
-        if (data.articles) {
-            totalPages = Math.ceil(data.totalResults / articlesPerPage);
-            bindData(data.articles);
-        } else {
-            console.error("No articles found");
-        }
-        updateButtons();
-    } catch (error) {
-        console.error("Error fetching news:", error);
-    }
+    const res = await fetch(`${url}${query}&page=${page}&pageSize=${articlesPerPage}&apiKey=${API_KEY}`);
+    //here page=1 and pageSize=12 means if 100 articles are there then it 1 (per page ) show 12 articles only
+    const data = await res.json();
+    totalPages = Math.ceil(data.totalResults / articlesPerPage);
+    bindData(data.articles);
+    updateButtons();
 }
 
 // Function to bind the fetched data to the HTML elements
@@ -71,7 +66,7 @@ function fillDataInCard(cardClone, article) {
 // Function to update the pagination buttons
 function updateButtons() {
     document.getElementById("prev-button").style.display = (currentPage === 1) ? 'none' : 'inline-block';
-    document.getElementById("next-button").style.display = (currentPage === totalPages) ? 'none' : 'inline-block';
+    document.getElementById("next-button").style.display = (currentPage === totalPages )? 'none' : 'inline-block';
 }
 
 // Add click event listener to the previous button
@@ -110,7 +105,7 @@ const searchText = document.getElementById("search-text");
 searchButton.addEventListener("click", () => {
     const query = searchText.value;
     if (!query) return;
-    currentPage = 1; 
-    currentQuery = query; 
+    currentPage = 1; // Reset to first page when a new search is made
+    currentQuery = query; // Update current query to the searched query
     fetchNews(query, currentPage);
 });
